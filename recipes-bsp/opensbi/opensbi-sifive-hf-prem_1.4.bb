@@ -39,6 +39,8 @@ do_install:append() {
 	# In the future these might be required as a dependency for other packages.
 	# At the moment just delete them to avoid warnings
 	rm -r ${D}/include
+	mkdir -p ${D}/share/opensbi/*/${RISCV_SBI_PLAT}/lib
+	cp -r ${D}/lib64/lp64/opensbi/*/*/lib/libplatsbi.a ${D}/share/opensbi/*/${RISCV_SBI_PLAT}/lib
 	rm -r ${D}/lib*
 	rm -r ${D}/share/opensbi/*/${RISCV_SBI_PLAT}/firmware/payloads
 }
@@ -47,6 +49,7 @@ do_deploy () {
 	install -m 755 ${D}/share/opensbi/*/${RISCV_SBI_PLAT}/firmware/fw_payload.* ${DEPLOYDIR}/
 	install -m 755 ${D}/share/opensbi/*/${RISCV_SBI_PLAT}/firmware/fw_jump.* ${DEPLOYDIR}/
 	install -m 755 ${D}/share/opensbi/*/${RISCV_SBI_PLAT}/firmware/fw_dynamic.* ${DEPLOYDIR}/
+	install -m 755 ${D}/share/opensbi/*/${RISCV_SBI_PLAT}/lib/libplatsbi.a ${DEPLOYDIR}/
 }
 
 addtask deploy before do_build after do_install
@@ -54,6 +57,7 @@ addtask deploy before do_build after do_install
 FILES:${PN} += "/share/opensbi/*/${RISCV_SBI_PLAT}/firmware/fw_jump.*"
 FILES:${PN} += "/share/opensbi/*/${RISCV_SBI_PLAT}/firmware/fw_payload.*"
 FILES:${PN} += "/share/opensbi/*/${RISCV_SBI_PLAT}/firmware/fw_dynamic.*"
+FILES:${PN}-staticdev += "/share/opensbi/*/${RISCV_SBI_PLAT}/lib/libplatsbi.a"
 
 COMPATIBLE_HOST = "(riscv64|riscv32).*"
 INHIBIT_PACKAGE_STRIP = "1"
